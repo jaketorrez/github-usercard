@@ -6,10 +6,12 @@ import axios from "axios"
     https://api.github.com/users/<your name>
 */
 const myUserUrl = "https://api.github.com/users/jaketorrez"
-let req = axios.get(myUserUrl)
-let resp = () => {
-  return req.then(resp)
-}
+axios.get(myUserUrl)
+  .then(resp => {
+    console.log(resp)
+  }) .catch(err => {
+    console.log(`There was a problem: ${err}`)
+  })
 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
