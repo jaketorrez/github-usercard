@@ -1,8 +1,21 @@
+import axios from "axios"
+
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
+const myUserUrl = "https://api.github.com/users/jaketorrez"
+const cards = document.querySelector('.cards')
+let card;
+axios.get(myUserUrl)
+  .then(resp => {
+    card = userCardBuilder(resp.data)
+    cards.appendChild(card)
+  }) .catch(err => {
+    console.log(`There was a problem:
+    ${err}`)
+  })
 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
@@ -28,7 +41,21 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const urlStr = "https://api.github.com/users/"
+const followersArray = ["danieltantonio", "avawing", "sami-alaloosi", 
+  "OrlandoDavila", "samuelrowan", "tetondan", "dustinmyers", "justsml", "luishrd"]
+const followerUrls = followersArray.map(obj => {
+  return urlStr + obj
+})
+followerUrls.forEach(url => {
+  axios.get(url).then(resp => {
+    let newCard = userCardBuilder(resp.data)
+    cards.appendChild(newCard)
+  }).catch(err => {
+    console.log(`There was a problem: 
+    ${err}`)
+  }) // End axios
+}) // End foreach
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -58,3 +85,47 @@ const followersArray = [];
     luishrd
     bigknell
 */
+
+function userCardBuilder(userData) {
+
+  // Create new elements and store them in variables
+  let userCard = document.createElement('div')
+  userCard.classList.add('card')
+  let userImg = document.createElement('img')
+    userImg.setAttribute('src', userData.avatar_url)
+    userImg.setAttribute('alt', userData.name)
+  let cardInfo = document.createElement('div')
+    cardInfo.classList.add('card-info')
+  let userName = document.createElement('h3')
+    userName.textContent = userData.name
+    userName.classList.add('name')
+  let userLogin = document.createElement('p')
+    userLogin.textContent = '@' + userData.login
+    userLogin.classList.add('username')
+  let userLocation = document.createElement('p')
+    userLocation.textContent = userData.location
+  let userProfile = document.createElement('p')
+  let profileUrl = document.createElement('a')
+    profileUrl.href = `https://github.com/${userData.login}`
+  let followers = document.createElement('p')
+    followers.textContent = `Followers: ${userData.followers}`
+  let following = document.createElement('p')
+    following.textContent = `Following: ${userData.following}`
+  let userBio = document.createElement('p')
+    userBio.textContent = userData.bio
+
+    // Place the elements into arrays
+    let cardElements = [userImg, cardInfo]
+  let cardInfoElements = [userName, userLogin, 
+    userLocation, userProfile, followers, following, userBio]
+
+  // Append all child elements to their parents
+  userProfile.appendChild(profileUrl)
+  cardElements.forEach(Element => {
+    userCard.appendChild(Element)
+  })
+  cardInfoElements.forEach(Element => {
+    cardInfo.appendChild(Element)
+  })
+  return userCard
+}
