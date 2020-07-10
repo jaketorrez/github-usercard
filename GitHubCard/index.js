@@ -94,10 +94,14 @@ function userCardBuilder(userData) {
   let userImg = document.createElement('img')
     userImg.setAttribute('src', userData.avatar_url)
     userImg.setAttribute('alt', userData.name)
+  let cardInfo = document.createElement('div')
+    cardInfo.classList.add('card-info')
   let userName = document.createElement('h3')
     userName.textContent = userData.name
+    userName.classList.add('name')
   let userLogin = document.createElement('p')
     userLogin.textContent = '@' + userData.login
+    userLogin.classList.add('username')
   let userLocation = document.createElement('p')
     userLocation.textContent = userData.location
   let userProfile = document.createElement('p')
@@ -110,14 +114,18 @@ function userCardBuilder(userData) {
   let userBio = document.createElement('p')
     userBio.textContent = userData.bio
 
-    // Place the elements into an array
-  let cardElements = [userImg, userName, userLogin, 
+    // Place the elements into arrays
+    let cardElements = [userImg, cardInfo]
+  let cardInfoElements = [userName, userLogin, 
     userLocation, userProfile, followers, following, userBio]
 
   // Append all child elements to their parents
   userProfile.appendChild(profileUrl)
   cardElements.forEach(Element => {
     userCard.appendChild(Element)
+  })
+  cardInfoElements.forEach(Element => {
+    cardInfo.appendChild(Element)
   })
   return userCard
 }
