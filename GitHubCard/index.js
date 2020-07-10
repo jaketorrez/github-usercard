@@ -41,11 +41,21 @@ axios.get(myUserUrl)
     user, and adding that card to the DOM.
 */
 
+const urlStr = "https://api.github.com/users/"
 const followersArray = ["danieltantonio", "avawing", "sami-alaloosi", 
   "OrlandoDavila", "samuelrowan", "tetondan", "dustinmyers", "justsml", "luishrd"]
-const followerUrls = followers.map(obj => {
-  return obj.url
+const followerUrls = followersArray.map(obj => {
+  return urlStr + obj
 })
+followerUrls.forEach(url => {
+  axios.get(url).then(resp => {
+    let newCard = userCardBuilder(resp.data)
+    cards.appendChild(newCard)
+  }).catch(err => {
+    console.log(`There was a problem: 
+    ${err}`)
+  }) // End axios
+}) // End foreach
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
