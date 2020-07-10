@@ -6,11 +6,15 @@ import axios from "axios"
     https://api.github.com/users/<your name>
 */
 const myUserUrl = "https://api.github.com/users/jaketorrez"
+const cards = document.querySelector('.cards')
+let card;
 axios.get(myUserUrl)
   .then(resp => {
-    console.log(resp)
+    card = userCardBuilder(resp.data)
+    cards.appendChild(card)
   }) .catch(err => {
-    console.log(`There was a problem: ${err}`)
+    console.log(`There was a problem:
+    ${err}`)
   })
 
 /*
@@ -37,7 +41,11 @@ axios.get(myUserUrl)
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ["danieltantonio", "avawing", "sami-alaloosi", 
+  "OrlandoDavila", "samuelrowan", "tetondan", "dustinmyers", "justsml", "luishrd"]
+const followerUrls = followers.map(obj => {
+  return obj.url
+})
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -67,3 +75,39 @@ const followersArray = [];
     luishrd
     bigknell
 */
+
+function userCardBuilder(userData) {
+
+  // Create new elements and store them in variables
+  let userCard = document.createElement('div')
+  userCard.classList.add('card')
+  let userImg = document.createElement('img')
+    userImg.setAttribute('src', userData.avatar_url)
+    userImg.setAttribute('alt', userData.name)
+  let userName = document.createElement('h3')
+    userName.textContent = userData.name
+  let userLogin = document.createElement('p')
+    userLogin.textContent = '@' + userData.login
+  let userLocation = document.createElement('p')
+    userLocation.textContent = userData.location
+  let userProfile = document.createElement('p')
+  let profileUrl = document.createElement('a')
+    profileUrl.href = `https://github.com/${userData.login}`
+  let followers = document.createElement('p')
+    followers.textContent = `Followers: ${userData.followers}`
+  let following = document.createElement('p')
+    following.textContent = `Following: ${userData.following}`
+  let userBio = document.createElement('p')
+    userBio.textContent = userData.bio
+
+    // Place the elements into an array
+  let cardElements = [userImg, userName, userLogin, 
+    userLocation, userProfile, followers, following, userBio]
+
+  // Append all child elements to their parents
+  userProfile.appendChild(profileUrl)
+  cardElements.forEach(Element => {
+    userCard.appendChild(Element)
+  })
+  return userCard
+}
